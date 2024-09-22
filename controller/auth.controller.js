@@ -7,8 +7,8 @@ const jwt = require("jsonwebtoken")
 const SendMail = require("../utils/email")
 
 exports.registerUser = asyncHander(async (req, res) => {
-    const { name, password, mobile, email } = req.body
-    const {error,isError } = checkEmpty({ name, password, mobile, email } )
+    const { fname, lname, dob, gender, mobile, email, password } = req.body
+    const {error,isError } = checkEmpty({ fname, lname, dob, gender, mobile, email, password } )
     if (isError) {
          return res.status(400).json({message:"All Fields Required", error })
     }
@@ -26,7 +26,7 @@ exports.registerUser = asyncHander(async (req, res) => {
         return res.status(400).json({ message: "Email Already registered with us" })
     }
     const hashPass = await bcrypt.hash(password, 10)
-    await Auth.create({name, password:hashPass, mobile,email})
+    await Auth.create({ password: hashPass, fname, lname, dob, gender, mobile, email,})
     res.json({message:"USER REGISTER SUCCESS"})
 })
 exports.loginUser = asyncHander(async (req, res) => {

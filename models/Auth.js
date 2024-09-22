@@ -11,5 +11,4 @@ const authSchema = new mongoose.Schema({
     otp: {type: String},
     avatar: {type: String, default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4rHk-t6N9r-UDu9KB5irEON9DwIWDX3Roig&s" },
 })
-
 module.exports = mongoose.model("auth", authSchema)
