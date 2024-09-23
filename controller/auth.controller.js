@@ -57,7 +57,10 @@ exports.loginUser = asyncHander(async (req, res) => {
             message: "Credentials Verify Success. OTP sent to your registered Email", 
             result: {
                 _id: isFound._id,
-                name: isFound.name,
+                fname: isFound.fname,
+                lname: isFound.lname,
+                gender: isFound.gender,
+                dob: isFound.dob,
                 email: isFound.email,
                 mobile: isFound.mobile,
             }
