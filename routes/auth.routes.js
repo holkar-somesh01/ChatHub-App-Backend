@@ -5,5 +5,6 @@ router
     .post("/login-user", authController.loginUser)
     .post("/verify-otp", authController.verifyOTP)
     .post("/logout-user", authController.logoutUser)
+    // .post("/new-contact", authController.AddNewUser)
      
 module.exports= router

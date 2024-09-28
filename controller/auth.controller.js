@@ -1,12 +1,13 @@
-const asyncHander = require("express-async-handler")
+const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
 const { checkEmpty } = require("../utils/checkEmpty")
 const Auth = require("../models/Auth")
 const validator= require("validator")
 const jwt = require("jsonwebtoken")
 const SendMail = require("../utils/email")
+const ChatUser = require("../models/ChatUser")
 
-exports.registerUser = asyncHander(async (req, res) => {
+exports.registerUser = asyncHandler(async (req, res) => {
     const { fname, lname, dob, gender, mobile, email, password } = req.body
     const {error,isError } = checkEmpty({ fname, lname, dob, gender, mobile, email, password } )
     if (isError) {
@@ -29,7 +30,7 @@ exports.registerUser = asyncHander(async (req, res) => {
     await Auth.create({ password: hashPass, fname, lname, dob, gender, mobile, email,})
     res.json({message:"USER REGISTER SUCCESS"})
 })
-exports.loginUser = asyncHander(async (req, res) => {
+exports.loginUser = asyncHandler(async (req, res) => {
     const { username, password } = req.body;
     const { error, isError } = checkEmpty({ username, password });
     if (isError) {
@@ -70,7 +71,7 @@ exports.loginUser = asyncHander(async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 })
-exports.verifyOTP = asyncHander(async (req, res) => {
+exports.verifyOTP = asyncHandler(async (req, res) => {
     const { otp, username } = req.body
     const { isError, error } = checkEmpty({ otp, username })
     if (isError) {
@@ -90,7 +91,8 @@ exports.verifyOTP = asyncHander(async (req, res) => {
     })
     res.json({message:"OTP Verify Success"})
 })
-exports.logoutUser = asyncHander(async (req, res) => {
+exports.logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie("chathub")
     res.json({message:"User Logout Success"})
 })
+ 
