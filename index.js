@@ -17,15 +17,15 @@ app.use("/api/auth", require("./routes/auth.routes"))
 app.use("/api/contact", adminProtected, require("./routes/newUser.routes"))
 
 app.use("*", (req, res) => {
-    res.status(404).json({message:"RESOURCE NOT FOUND"})
+    res.status(404).json({ message: "RESOURCE NOT FOUND" })
 })
 app.use((err, req, res, next) => {
     console.log(err);
-    res.status(500).json({message:"SERVER ERROR",error:err.message})
+    res.status(500).json({ message: "SERVER ERROR", error: err.message })
 })
 
 mongoose.connect(process.env.MONGO_URL)
 mongoose.connection.once("open", () => {
     console.log("MONGO CONNECTED");
-    app.listen(process.env.PORT,console.log("SERVER RUNNING 🏃‍♂️"))
+    app.listen(process.env.PORT, console.log("SERVER RUNNING 🏃‍♂️"))
 })

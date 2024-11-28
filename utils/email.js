@@ -1,11 +1,11 @@
 const nodemailer = require("nodemailer")
 
-const SendMail = ({subject, to,message}) => new Promise((resolve, reject) => {
+const SendMail = ({ subject, to, message }) => new Promise((resolve, reject) => {
     const Email = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user:process.env.FROM_EMAIL,
-            pass:process.env.EMAIL_PASS,
+            user: process.env.FROM_EMAIL,
+            pass: process.env.EMAIL_PASS,
         }
     })
     Email.sendMail({
@@ -13,7 +13,7 @@ const SendMail = ({subject, to,message}) => new Promise((resolve, reject) => {
         to: to,
         message: message,
         subject: subject,
-        html:message
+        html: message
     }, (err) => {
         if (err) {
             console.log(err)

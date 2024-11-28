@@ -2,42 +2,42 @@ const asyncHandler = require("express-async-handler")
 const bcrypt = require("bcryptjs")
 const { checkEmpty } = require("../utils/checkEmpty")
 const Auth = require("../models/Auth")
-const validator= require("validator")
+const validator = require("validator")
 const jwt = require("jsonwebtoken")
 const SendMail = require("../utils/email")
 const ChatUser = require("../models/ChatUser")
 
 exports.registerUser = asyncHandler(async (req, res) => {
     const { fname, lname, dob, gender, mobile, email, password } = req.body
-    const {error,isError } = checkEmpty({ fname, lname, dob, gender, mobile, email, password } )
+    const { error, isError } = checkEmpty({ fname, lname, dob, gender, mobile, email, password })
     if (isError) {
-         return res.status(400).json({message:"All Fields Required", error })
+        return res.status(400).json({ message: "All Fields Required", error })
     }
-     if (!validator.isEmail(email)) {
+    if (!validator.isEmail(email)) {
         return res.status(400).json({ message: "Invalid Email" })
     }
-     if (!validator.isStrongPassword(password)) {
+    if (!validator.isStrongPassword(password)) {
         return res.status(400).json({ message: "Provide Strong Password" })
     }
-    if (!validator.isMobilePhone(mobile,"en-IN")) {
-        return res.status(400).json({message:"Invalid Mobile Number"})
+    if (!validator.isMobilePhone(mobile, "en-IN")) {
+        return res.status(400).json({ message: "Invalid Mobile Number" })
     }
     const isFound = await Auth.findOne({ email, mobile })
     if (isFound) {
         return res.status(400).json({ message: "Email Already registered with us" })
     }
     const hashPass = await bcrypt.hash(password, 10)
-    await Auth.create({ password: hashPass, fname, lname, dob, gender, mobile, email,})
-    res.json({message:"USER REGISTER SUCCESS"})
+    await Auth.create({ password: hashPass, fname, lname, dob, gender, mobile, email, })
+    res.json({ message: "USER REGISTER SUCCESS" })
 })
 exports.loginUser = asyncHandler(async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password } = req.body
     const { error, isError } = checkEmpty({ username, password });
     if (isError) {
         return res.status(400).json({ message: "All Fields Required", error });
     }
     try {
-        const isFound = await Auth.findOne({$or: [{ email: username }, { mobile: username },]});
+        const isFound = await Auth.findOne({ $or: [{ email: username }, { mobile: username },] });
         if (!isFound) {
             return res.status(400).json({ message: "User Email OR Mobile Not Found" });
         }
@@ -52,10 +52,10 @@ exports.loginUser = asyncHandler(async (req, res) => {
             message: `<h1>Do Not share Your Account OTP</h1>
                       <p>Your Login OTP <strong>${otp}</strong> </p>`
         });
-       
+
         await Auth.findByIdAndUpdate(isFound._id, { otp: otp })
         res.json({
-            message: "Credentials Verify Success. OTP sent to your registered Email", 
+            message: "Credentials Verify Success. OTP sent to your registered Email",
             result: {
                 _id: isFound._id,
                 fname: isFound.fname,
@@ -64,6 +64,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
                 dob: isFound.dob,
                 email: isFound.email,
                 mobile: isFound.mobile,
+                avatar: isFound.avatar,
             }
         });
     } catch (error) {
@@ -75,24 +76,23 @@ exports.verifyOTP = asyncHandler(async (req, res) => {
     const { otp, username } = req.body
     const { isError, error } = checkEmpty({ otp, username })
     if (isError) {
-        return res.status(400).json({message:"All Fields Required.", error})
+        return res.status(400).json({ message: "All Fields Required.", error })
     }
-    const isFound = await Auth.findOne({$or: [{ email: username },{ mobile: username },]});
+    const isFound = await Auth.findOne({ $or: [{ email: username }, { mobile: username },] });
     if (!isFound) {
-        return res.status(400).json({message:"Invalid Email OR Mobile"})
+        return res.status(400).json({ message: "Invalid Email OR Mobile" })
     }
-    if (otp !== isFound.otp ) {
-        return res.status(400).json({message:"Invalid OTP"})
+    if (otp !== isFound.otp) {
+        return res.status(400).json({ message: "Invalid OTP" })
     }
     const token = jwt.sign({ userId: isFound._id }, process.env.JWT_KEY, { expiresIn: "15d" })
     res.cookie("chathub", token, {
         maxAge: 1000 * 60 * 60 * 24 * 15,
-        httpOnly:true
+        httpOnly: true
     })
-    res.json({message:"OTP Verify Success"})
+    res.json({ message: "OTP Verify Success" })
 })
 exports.logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie("chathub")
-    res.json({message:"User Logout Success"})
+    res.json({ message: "User Logout Success" })
 })
- 

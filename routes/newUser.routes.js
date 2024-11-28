@@ -5,5 +5,5 @@ router
     .post("/new-contact", newContactController.AddNewUser)
     .put("/update-contact/:id", newContactController.UpdateUser)
     .delete("/delete-contact/:id", newContactController.deleteUser)
-     
-module.exports= router
+
+module.exports = router
