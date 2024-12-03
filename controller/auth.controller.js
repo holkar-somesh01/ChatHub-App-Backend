@@ -90,7 +90,18 @@ exports.verifyOTP = asyncHandler(async (req, res) => {
         maxAge: 1000 * 60 * 60 * 24 * 15,
         httpOnly: true
     })
-    res.json({ message: "OTP Verify Success" })
+    res.json({
+        message: "OTP Verify Success", result: {
+            _id: isFound._id,
+            fname: isFound.fname,
+            lname: isFound.lname,
+            gender: isFound.gender,
+            dob: isFound.dob,
+            email: isFound.email,
+            mobile: isFound.mobile,
+            avatar: isFound.avatar,
+        }
+    })
 })
 exports.logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie("chathub")
