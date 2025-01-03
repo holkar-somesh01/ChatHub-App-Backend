@@ -109,3 +109,6 @@ exports.logoutUser = asyncHandler(async (req, res) => {
     res.clearCookie("chathub")
     res.json({ status: 200, message: "User Logout Success" })
 })
+exports.UpdateProfile = asyncHandler(async (req, res) => {
+    res.status(200).json({ status: 200, message: "Profile Update Success" })
+})
