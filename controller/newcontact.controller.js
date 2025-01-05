@@ -19,7 +19,7 @@ exports.AddNewUser = expressAsyncHandler(async (req, res) => {
     return res.json({ status: 200, message: "New Contact Added" })
 })
 exports.fetchUser = expressAsyncHandler(async (req, res) => {
-    const result = await ChatUser.find({ userId: req.user })
+    const result = await ChatUser.find({ userId: req.user, isDelete: false, isRemove: false, isHide: false })
     return res.status(200).json({ status: 200, message: "Contact Fetched...!", result })
 })
 exports.UpdateUser = expressAsyncHandler(async (req, res) => {
@@ -27,6 +27,6 @@ exports.UpdateUser = expressAsyncHandler(async (req, res) => {
     res.status(200).json({ status: 200, message: "Contact Updated...!" })
 })
 exports.deleteUser = expressAsyncHandler(async (req, res) => {
-    await ChatUser.findByIdAndDelete(req.params.id)
+    await ChatUser.findByIdAndUpdate(req.params.id, { isDelete: true })
     res.status(200).json({ status: 200, message: "Contact Deleted...!" })
 })

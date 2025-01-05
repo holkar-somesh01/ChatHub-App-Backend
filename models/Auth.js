@@ -10,5 +10,7 @@ const authSchema = new mongoose.Schema({
     password: { type: String, required: true },
     otp: { type: String },
     avatar: { type: String, default: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4rHk-t6N9r-UDu9KB5irEON9DwIWDX3Roig&s" },
-})
+    about: { type: String },
+    isDelete: { type: Boolean, default: false },
+}, { timestamps: true })
 module.exports = mongoose.model("auth", authSchema)

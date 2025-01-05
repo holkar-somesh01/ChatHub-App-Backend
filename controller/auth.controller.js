@@ -6,6 +6,8 @@ const validator = require("validator")
 const jwt = require("jsonwebtoken")
 const SendMail = require("../utils/email")
 const ChatUser = require("../models/ChatUser")
+const { uploadSingle } = require("../utils/upload")
+const cloudinary = require("../utils/cloudinary.config")
 
 exports.registerUser = asyncHandler(async (req, res) => {
     const { fname, lname, dob, gender, mobile, email, password } = req.body
@@ -110,5 +112,17 @@ exports.logoutUser = asyncHandler(async (req, res) => {
     res.json({ status: 200, message: "User Logout Success" })
 })
 exports.UpdateProfile = asyncHandler(async (req, res) => {
-    res.status(200).json({ status: 200, message: "Profile Update Success" })
+    uploadSingle(req, res, async (err) => {
+        if (err) {
+            return res.status(400).json({ status: 400, message: "Error Uploading File", error: err.message })
+        }
+        const { fname, lname, dob, gender, mobile, email } = req.body
+        let avatar
+        if (req.file) {
+            const { secure_url } = await cloudinary.uploader.upload(req.file.path)
+            avatar = secure_url
+        }
+        await Auth.findByIdAndUpdate(req.user, { fname, lname, dob, gender, mobile, email, avatar })
+        return res.status(200).json({ status: 200, message: "Profile Update Success" })
+    })
 })

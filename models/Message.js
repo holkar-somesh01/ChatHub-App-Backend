@@ -5,7 +5,10 @@ const messageSchema = new mongoose.Schema({
     image: { type: [String] },
     senderId: { type: mongoose.Types.ObjectId, ref: "auth" },
     receiverId: { type: mongoose.Types.ObjectId, ref: "chatuser" },
-    isDelete: { type: Boolean, default: false }
-})
+    updateTime: { type: Number, default: 15 },
+    isDelete: { type: Boolean, default: false },
+    isRemove: { type: Boolean, default: false },
+    isStared: { type: Boolean, default: false },
+}, { timestamps: true })
 
 module.exports = mongoose.model("Message", messageSchema)
