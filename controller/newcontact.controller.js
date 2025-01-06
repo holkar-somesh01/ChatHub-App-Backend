@@ -1,6 +1,7 @@
 const expressAsyncHandler = require("express-async-handler")
 const { checkEmpty } = require("../utils/checkEmpty")
 const validator = require("validator")
+const bcrypt = require("bcryptjs")
 const ChatUser = require("../models/ChatUser")
 
 exports.AddNewUser = expressAsyncHandler(async (req, res) => {
@@ -30,6 +31,22 @@ exports.hideUser = expressAsyncHandler(async (req, res) => {
     const { hideID } = req.params
     await ChatUser.findByIdAndUpdate(hideID, { isHide: true })
     return res.json({ status: 200, message: "User Hide Success" })
+})
+exports.LockChat = expressAsyncHandler(async (req, res) => {
+    const { lockId } = req.params
+    const { lock, password } = req.body
+    const { isError, error } = checkEmpty({ password })
+    if (isError) {
+        return res.status(400).json({ message: "All fields required.", error })
+    }
+    const hash = await bcrypt.hash(password, 10)
+    await ChatUser.findByIdAndUpdate(lockId, {
+        isLocked: {
+            lock: true,
+            password: hash
+        }
+    })
+    res.json({ status: 200, message: "Your chat is Locked" })
 })
 exports.deleteUser = expressAsyncHandler(async (req, res) => {
     await ChatUser.findByIdAndUpdate(req.params.id, { isDelete: true })
