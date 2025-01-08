@@ -5,7 +5,7 @@ const messageSchema = new mongoose.Schema({
     image: { type: [String] },
     senderId: { type: mongoose.Types.ObjectId, ref: "auth" },
     receiverId: { type: mongoose.Types.ObjectId, ref: "chatuser" },
-    updateTime: { type: Number, default: 15 },
+    updateTime: { type: Date, default: Date.now() },
     isDelete: { type: Boolean, default: false },
     isRemove: { type: Boolean, default: false },
     isStared: { type: Boolean, default: false },

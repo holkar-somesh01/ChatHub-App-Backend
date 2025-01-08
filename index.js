@@ -15,6 +15,7 @@ app.use(cookieParser())
 
 app.use("/api/auth", require("./routes/auth.routes"))
 app.use("/api/contact", adminProtected, require("./routes/newUser.routes"))
+app.use("/api/message", adminProtected, require("./routes/message.routes"))
 
 app.use("*", (req, res) => {
     res.status(404).json({ status: 404, message: "RESOURCE NOT FOUND" })
