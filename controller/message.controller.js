@@ -39,3 +39,12 @@ exports.UpdateMessage = AsyncHandler(async (req, res) => {
         res.status(200).json({ message: "Message Update Success" })
     })
 })
+exports.DeleteMessage = AsyncHandler(async (req, res) => {
+    const { DeleteMessageId } = req.params
+    await Message.findByIdAndUpdate(DeleteMessageId, { isDelete: true })
+    return res.status(200).json({ status: 200, message: "Message Delete Success" })
+})
+exports.FetchMessage = AsyncHandler(async (req, res) => {
+    await Message.find({ isDelete: false })
+    return res.status(200).json({ status: 200, message: "Message Fetch Success" })
+})
