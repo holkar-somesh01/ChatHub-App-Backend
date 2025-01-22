@@ -7,5 +7,6 @@ router
     .put("/hide-chat/:hideID", newContactController.hideUser)
     .put("/lock-chat/:lockId", newContactController.LockChat)
     .delete("/delete-contact/:id", newContactController.deleteUser)
+    .put("/restore-contact/:id", newContactController.restoreUser)
 
 module.exports = router

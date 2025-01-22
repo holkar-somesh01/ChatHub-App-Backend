@@ -52,3 +52,7 @@ exports.deleteUser = expressAsyncHandler(async (req, res) => {
     await ChatUser.findByIdAndUpdate(req.params.id, { isDelete: true })
     res.status(200).json({ status: 200, message: "Contact Deleted...!" })
 })
+exports.restoreUser = expressAsyncHandler(async (req, res) => {
+    await ChatUser.findByIdAndUpdate(req.params.id, { isDelete: false })
+    res.status(200).json({ status: 200, message: "Contact Restored...!" })
+})
