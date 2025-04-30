@@ -48,3 +48,8 @@ exports.FetchMessage = AsyncHandler(async (req, res) => {
     await Message.find({ isDelete: false })
     return res.status(200).json({ status: 200, message: "Message Fetch Success" })
 })
+exports.RestoreMessage = AsyncHandler(async (req, res) => {
+    const { messageId } = req.params
+    await Message.findByIdAndUpdate(messageId, { isDelete: false })
+    return res.status(200).json({ status: 200, message: "Message Restore Success!" })
+})
